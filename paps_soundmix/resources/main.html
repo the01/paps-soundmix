@@ -1,0 +1,206 @@
+<!--
+VERSION 0.1.0
+-->
+<div class="panel panel-default">
+    <h3 class="panel-heading">Files</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>File</th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: files">
+            <tr>
+                <td data-bind="text: id"></td>
+                <td data-bind="text: file"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <h3 class="panel-heading">Groups</h3>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Action</th>
+                    <th>Active Def</th>
+                    <!--
+                    <th>People</th>
+                    -->
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: groups">
+                <tr>
+                    <td data-bind="text: id"></td>
+                    <td data-bind="text: name"></td>
+                    <!-- <td data-bind="text: typeof action != 'undefined' ? action : ''"> -->
+                    <td>
+                        <!-- ko if: id > 0 -->
+                        <select data-bind="
+                            value: action,
+                            optionsCaption: 'Choose...'"
+                        >
+                            <option>percent</option>
+                            <option>percent_total</option>
+                        </select>
+                        <!-- /ko -->
+                    </td>
+                    </td>
+                    <!--<td data-bind="text: typeof active_definition != 'undefined' ? active_definition : ''">-->
+                    <td>
+                        <!-- ko if: id > 0 -->
+                        <select data-bind="
+                            value: active_definition,
+                            optionsCaption: 'Choose...'"
+                        >
+                            <option>standing</option>
+                            <option>sitting</option>
+                        </select>
+                        <!-- /ko -->
+                    </td>
+                    <!--
+                    <td>
+                        <!-- ko foreach: people -- >
+                            <!-- ko text: $data.id + ',' --><!-- /ko -- >
+                        <!-- /ko -- >
+                    </td>
+                    -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="">
+    <h3>Channels</h3>
+    <div class="soundmix_channels_controls col-xs-12">
+        <div class="btn-group btn-group-justified btn-group-sm" role="group" aria-describedby="soundmix_channels_help">
+            <a class="btn btn-default" href="#" data-bind="click: channels_state_set.bind($data, 'PLAY')">
+                <i class="fa fa-play fa-2x"></i>
+            </a>
+            <a class="btn btn-default" href="#" data-bind="click: channels_state_set.bind($data, 'PAUSE')">
+                <i class="fa fa-pause fa-2x"></i>
+            </a>
+            <a class="btn btn-default" href="#" data-bind="click: channels_state_set.bind($data, 'STOP')">
+                <i class="fa fa-stop fa-2x"></i>
+            </a>
+        </div>
+        <span id="soundmix_channels_help" class="help-block">Apply <code>play</code>/<code>pause</code>/<code>stop</code> to all channels
+            <small>(with an associated group [and file])</small>
+        </span>
+    </div>
+    <div id="soundmix_channels" class="space col-xs-12">
+        <!-- ko foreach: { data: channels, as: 'channel' } -->
+        <div class="soundmix_channel panel panel-default">
+            <div class="soundmix_channel_header panel-heading">
+                <div class="row">
+                    <div class="soundmix_channel_header_title text-center col-xs-12 col-sm-6">
+                        <a class="btn btn-danger btn-sm disabled" href="#" data-bind="">
+                            <i class="fa fa-trash-o fa-lg"></i>
+                        </a>
+                        <span class="h4" data-bind="html: 'Channel ' + channel.id"></span>
+                    </div>
+
+                    <div class="clearfix space col-xs-12 visible-xs-block" style="height: 1px;"></div>
+
+                    <div class="soundmix_channel_controls col-xs-12 col-sm-5 col-sm-offset-1">
+                        <div class="btn-group btn-group-justified btn-group-xs pull-right" role="group">
+                            <a class="btn btn-default" href="#" data-bind="visible: channel.state() != 'PLAY', click: channel.state_set.bind($data, 'PLAY')">
+                                <i class="fa fa-play fa-2x"></i>
+                            </a>
+                            <a class="btn btn-default" href="#" data-bind="visible: channel.state() == 'PLAY', click: channel.state_set.bind($data, 'PAUSE')">
+                                <i class="fa fa-pause fa-2x"></i>
+                            </a>
+                            <a class="btn btn-default" href="#" data-bind="visible: channel.state() != 'STOP', click: channel.state_set.bind($data, 'STOP')">
+                                <i class="fa fa-stop fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body form-horizontal">
+                <div class="soundmix_channel_volume row">
+                    <div class="form-group col-sm-10 col-xs-12">
+                        <label class="control-label col-sm-2 col-xs-3" data-bind="attr: {for: 'soundmix_channel_' + channel.id + '_volume'}">
+                            Volume
+                        </label>
+
+                        <div class="col-sm-10 col-sm-offset-0 col-xs-8 col-xs-offset-1">
+                                <!-- modified bootstrap-slider.js to get it working in parent width -->
+                                <!-- TODO: trigger draw update for slider onOrientaionChange -->
+                                <input type="text" class="slider form-control" value=""
+                                       data-slider-min="0" data-slider-max="1" data-slider-step=".05" data-slider-orientation="horizontal"
+                                       data-slider-tooltip="" data-slider-tooltip-position="bottom"
+                                       data-slider-ticks="[0.0, 0.2, 0.4, 0.6, 0.8, 1.0]" data-slider-ticks-labels='["0.0", "0.2", "0.4", "0.6", "0.8", "1.0"]'
+                                       data-bind="sliderValue: channel.volume, attr: {id: 'soundmix_channel_' + channel.id + '_volume'}" />
+
+                        </div>
+                    </div>
+                    <!--
+                    <div class="clearfix visible-xs-block"></div>
+
+                    <input type="number" min="0.0" max="1.0" step="any" data-bind="value: channel.volume"
+                    class="text-center col-sm-2 col-sm-offset-0 col-xs-4 col-xs-offset-4"/>
+                    -->
+                </div>
+
+                <div class="soundmix_channel_group space row">
+                    <div class="form-group col-sm-10 col-xs-12">
+                        <label class="control-label col-sm-2 col-xs-3" data-bind="attr: {for: 'soundmix_channel_' + channel.id + '_group'}">
+                            Group
+                        </label>
+
+                        <div class="col-sm-10 col-sm-offset-0 col-xs-8 col-xs-offset-0">
+                            <select class="form-control text-center" data-bind="options: $parent.groups, optionsCaption: 'Choose..', optionsText: 'name',
+                                value: group_selected,
+                                attr: {for: 'soundmix_channel_' + channel.id + '_group'},
+                                optionsAfterRender: function(option, item) {
+                                    if (item !== undefined) {
+                                        // disable group with id == 0 (not yet placed people)
+                                        option.disabled = item.id == 0;
+                                    }
+                                }
+                            ">
+                                <!-- group with id 0 == not yet placed group -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="soundmix_channel_file space row">
+                    <div class="form-group col-sm-10 col-xs-12">
+                        <label class="control-label col-sm-2 col-xs-3" data-bind="attr: {for: 'soundmix_channel_' + channel.id + '_file'}">
+                            File
+                        </label>
+
+                        <div class="col-sm-10 col-sm-offset-0 col-xs-8 col-xs-offset-0">
+                            <select class="form-control text-center" data-bind="
+                                options: $parent.files, optionsCaption: 'Choose..', optionsText: 'file',
+                                value: file_selected,
+                                attr: {for: 'soundmix_channel_' + channel.id + '_file'},
+                                optionsAfterRender: function(option, item) {
+                                    if (item !== undefined) {
+                                    }
+                                }"
+                            >
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+</div>
+<hr>
+<button class="btn btn-default" data-bind="click: activate">Activate</button>

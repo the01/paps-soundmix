@@ -1,0 +1,13 @@
+#plugin_widget {
+    
+}
+
+.space {
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .soundmix_channel_controls > .pull-right {
+        float: none !important;
+    }
+}

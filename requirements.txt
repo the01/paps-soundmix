@@ -1,0 +1,4 @@
+paps>=0.2.1a0,<0.3.0
+paps-settings>=0.2.2a0,<0.3.0
+enum34>=1.1.2,<1.2
+pygame
