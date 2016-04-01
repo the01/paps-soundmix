@@ -9,7 +9,7 @@ __email__ = "jungflor@gmail.com"
 __copyright__ = "Copyright (C) 2016, Florian JUNG"
 __license__ = "MIT"
 __version__ = "0.1.1"
-__date__ = "2016-03-31"
+__date__ = "2016-04-02"
 # Created: 2016-03-03 09:17
 
 from .plugin import SoundMixPlugin
@@ -45,7 +45,8 @@ class Angel(SoundMixPlugin):
     def do_people_seated(self):
         """
         Move all seats currently not sitting to Not Yet Placed.
-        Also move all seats that are not registered (Loaded into group, but no corresponding via on_person_new
+        Also move all seats that are not registered (Loaded into group, but no
+        corresponding via on_person_new)
 
         :rtype: None
         """
@@ -68,6 +69,14 @@ class Angel(SoundMixPlugin):
                     gp.difference_update(rm_seats)
                     gs[0]['people'].update(rm_seats)
 
+    def do_data_save(self):
+        """
+        Save the data to a pre-specified file
+
+        :rtype: None
+        """
+        self.save_data()
+
     def on_config(self, settings):
         self.debug("()")
         settings = dict(settings)
@@ -76,6 +85,8 @@ class Angel(SoundMixPlugin):
             cmd = settings['do']
             if cmd == "people_seated":
                 self.do_people_seated()
+            if cmd == "data_save":
+                self.do_data_save()
 
     def get_data(self):
         return super(Angel, self).get_data()
@@ -92,11 +103,6 @@ class Angel(SoundMixPlugin):
         self.debug("People: {}".format([str(p) for p in people]))
         super(Angel, self).on_person_update(people)
 
-    def start(self, blocking=False):
-        self.debug("()")
-        super(Angel, self).start(blocking)
-
     def stop(self):
-        self.debug("()")
-        super(Angel, self).stop()
         self.save_data()
+        super(Angel, self).stop()

@@ -17,11 +17,20 @@
             });
         };
 
+        self.doSave = function () {
+            var data = {};
+            data.do = "data_save";
+            AUDPlugin_soundmix.vm.data_send(data).then(function () {
+                console.debug(data);
+            });
+        };
+
         self.createVM = function (uri, data) {
             if (window.hasOwnProperty("AUDPlugin_soundmix") && AUDPlugin_soundmix_angel.smpEnter != null) {
                 AUDPlugin_soundmix_angel.smpCreateVM(uri, data);
             }
             AUDPlugin_soundmix.vm.doSeated = self.doSeated;
+            AUDPlugin_soundmix.vm.doSave = self.doSave;
         };
 
         self.enter = function (plugin_name, uri, data) {
@@ -46,7 +55,7 @@
     function bootstrap () {
         if (! window.hasOwnProperty("AUDPlugin_soundmix")) {
             // Wait for AUDPlugin_soundmix to be available
-            console.debug("Waiting for paps_soundmix");
+            console.debug("Waiting for plugin");
             setTimeout(bootstrap, 1);
             return;
         }

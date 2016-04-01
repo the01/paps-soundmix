@@ -9,7 +9,7 @@ __email__ = "jungflor@gmail.com"
 __copyright__ = "Copyright (C) 2015-16, Florian JUNG"
 __license__ = "MIT"
 __version__ = "0.2.1"
-__date__ = "2016-03-31"
+__date__ = "2016-04-02"
 # Created: 2015-07-21 18:25
 
 import threading
@@ -22,7 +22,6 @@ try:
 except ImportError:
     pygame = None
 
-from paps.person import Person
 from paps.crowd import PluginException
 from paps_settings import SettablePlugin
 
@@ -100,7 +99,7 @@ class SoundMixPlugin(SettablePlugin):
             :type _updater_timeout: float """
         self._data_file = settings.get('data_file')
         """ Location to save current settings to
-            :type _data_file: None | unicode """
+            :type : None | unicode """
 
     def _channels_number_set(self, number):
         """
@@ -773,8 +772,8 @@ class SoundMixPlugin(SettablePlugin):
     def start(self, blocking=False):
         self.debug("()")
         super(SoundMixPlugin, self).start(False)
-        self.load_data()
         try:
+            pygame.init()
             pygame.mixer.init()
             with self._channels_lock:
                 self._channels_number_set(self._channels_number_default)
@@ -782,10 +781,15 @@ class SoundMixPlugin(SettablePlugin):
             self.exception("Failed to init mixer")
             self.stop()
             return
+        # Needs pygame set up
+        self.load_data()
         try:
-            threading.Thread(
+            a_thread = threading.Thread(
                 target=self._volume_updater
-            ).start()
+            )
+            # Just in case
+            a_thread.daemon = True
+            a_thread.start()
         except:
             self.exception("Failed to start volume updater")
             self.stop()
@@ -796,6 +800,7 @@ class SoundMixPlugin(SettablePlugin):
         self.debug("()")
         if not self._is_running:
             return
+        super(SoundMixPlugin, self).stop()
         self._volume_should_update.set()
         try:
             pygame.mixer.quit()
