@@ -263,7 +263,7 @@ class SoundMixPlugin(SettablePlugin):
                     )
                 )
             try:
-                # on failure propably not paused either
+                # On failure probably not paused either
                 c['paused'] = False
                 c['channel'].play(
                     sound,
@@ -273,6 +273,7 @@ class SoundMixPlugin(SettablePlugin):
                 )
             except:
                 raise PlayerException("Playing failed")
+            self.debug(self._channels_state_get(channel_index))
 
     def _channels_stop(self, channel_index):
         """
@@ -773,7 +774,6 @@ class SoundMixPlugin(SettablePlugin):
         self.debug("()")
         super(SoundMixPlugin, self).start(False)
         try:
-            pygame.init()
             pygame.mixer.init()
             with self._channels_lock:
                 self._channels_number_set(self._channels_number_default)

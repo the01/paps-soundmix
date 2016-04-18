@@ -68,8 +68,6 @@ if __name__ == "__main__":
     })
     try:
         c.start(blocking=False)
-        angel._channels_files_replace(0, 0)
-        angel._channels_files_replace(1, 1)
         t.start(blocking=True)
     finally:
         if t._is_running:

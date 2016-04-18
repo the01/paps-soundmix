@@ -8,7 +8,7 @@ from __future__ import print_function
 __author__ = "d01 <Florian Jung>"
 __email__ = "jungflor@gmail.com"
 __copyright__ = "Copyright (C) 2015-16, Florian JUNG"
-__license__ = "All rights reserved"
+__license__ = "MIT"
 __version__ = "0.1.2"
 __date__ = "2016-03-31"
 # Created: 2015-09-20 05:30
@@ -41,14 +41,20 @@ def get_version():
     raise RuntimeError("Unable to find version string in {}".format(version_file))
 
 
+def get_file(path):
+    with open(path, "r") as f:
+        return f.read()
+
+
 version = get_version()
+readme = get_file("README.rst")
 requirements = open("requirements.txt", "r").read().split("\n")
 
 setup(
     name="paps-soundmix",
     version=version,
     description="Soundmix plugin for paps",
-    long_description="",
+    long_description=readme,
     author=__author__,
     author_email=__email__,
     url="https://github.com/the01/paps-soundmix",

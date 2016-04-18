@@ -26,6 +26,14 @@ class Angel(SoundMixPlugin):
         # -> all people standing are in self._people_active
         self._active_definition = "standing"
 
+    def _channels_play(self, channel_index, file_index=None, options=None):
+        if options is None:
+            options = {}
+        if options.get('loops') is None:
+            # If None -> loop indefinitely
+            options['loops'] = -1
+        super(Angel, self)._channels_play(channel_index, file_index, options)
+
     def get_info(self):
         info = super(Angel, self).get_info()
         info['description'] = "Play an orchestra with groups"
